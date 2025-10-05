@@ -11,45 +11,45 @@ version: "3.8"
 services:
 
   #Builds the frontend Docker image and creates the frontend microservice
-  brian-yolo-client:
-    image: brianbwire/brian-yolo-client:v1.0.0
-    build: ./client
-    container_name: brian-yolo-client
+  hmi-yolo-client:
+    image: hmasidza/hmi-yolo-client:v1.0.1
+    #build: ./client
+    container_name: hmi-yolo-client
     stdin_open: true
     tty: true
     ports:
       - "3000:3000"
     depends_on: 
-      - brian-yolo-backend
+      - hmi-yolo-backend
     networks:
       - app-net
 
   #Builds the backend Docker image and creates the backend microservice
-  brian-yolo-backend:
-    image: brianbwire/brian-yolo-backend:v1.0.0
-    build: ./backend
-    container_name: brian-yolo-backend
+  hmi-yolo-backend:
+    image: hmasidza/hmi-yolo-backend:v1.0.1
+    #build: ./backend
+    container_name: hmi-yolo-backend
     stdin_open: true
     tty: true
     restart: always
     ports:
       - "5000:5000"
     depends_on: 
-      - app-ip-mongo
+      - mongodb
     networks:
       - app-net
 
   #Creates the database microservice
-  app-ip-mongo:
+  mongodb:
     image: mongo
-    container_name: app-mongo
+    container_name: mongodb
     ports:
       - "27017:27017"
     networks:
       - app-net
     volumes:
       - type: volume
-        source: app-mongo-data
+        source: mongodb-data
         target: /data/db
 
 #Creates the network infrastructure necessary for the containers to communicate with each other
@@ -65,5 +65,5 @@ networks:
 
 #Creates a Docker volume that persists all the data stored in the database
 volumes:
-  app-mongo-data:
+  mongodb-data:
     driver: local
