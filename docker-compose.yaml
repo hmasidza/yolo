@@ -13,7 +13,6 @@ services:
   #Builds the frontend Docker image and creates the frontend microservice
   hmi-yolo-client:
     image: hmasidza/hmi-yolo-client:v1.0.1
-    #build: ./client
     container_name: hmi-yolo-client
     stdin_open: true
     tty: true
@@ -27,7 +26,6 @@ services:
   #Builds the backend Docker image and creates the backend microservice
   hmi-yolo-backend:
     image: hmasidza/hmi-yolo-backend:v1.0.1
-    #build: ./backend
     container_name: hmi-yolo-backend
     stdin_open: true
     tty: true
