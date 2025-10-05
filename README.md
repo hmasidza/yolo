@@ -53,3 +53,22 @@ docker-compose ps
 
 #### Added product (during test)
 ![Alt text](added-product.png)
+
+### Manual commands to build and push images to DockerHub
+To test functionality locally first
+
+```bash
+docker build -t hmasidza/hmi-yolo-client:v1.0.0 ./client
+```
+
+```bash
+docker push hmasidza/hmi-yolo-client:v1.0.0
+```
+
+```bash
+docker build -t hmasidza/hmi-yolo-backend:v1.0.0 ./backend
+```
+
+```bash
+docker push hmasidza/hmi-yolo-backend:v1.0.0
+```
