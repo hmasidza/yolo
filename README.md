@@ -16,31 +16,31 @@ A Node.js/Express backend API with MongoDB, containerized using Docker.
 #### Start all services
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 #### Start in detached mode
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 #### Stop all services
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 #### Stop and remove volumes
 
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
 #### View running services
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ### Screenshots
