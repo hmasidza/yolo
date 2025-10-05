@@ -1,15 +1,55 @@
-# Overview
-This project involved the containerization and deployment of a full-stack yolo application using Docker.
+# Yolo Backend API
 
+A Node.js/Express backend API with MongoDB, containerized using Docker.
 
-# Requirements
-Install the docker engine here:
-- [Docker](https://docs.docker.com/engine/install/) 
+## Prerequisites
 
-## How to launch the application 
+- [Docker](https://docs.docker.com/get-docker/) (version 20.10+)
+- [Docker Compose](https://docs.docker.com/compose/install/) (version 2.0+)
 
+## Quick Start
 
-![Alt text](image.png)
+### Clone the repository (if not already done)
 
-## How to run the app
-Use vagrant up --provison command
+### Start - Stop the application
+
+#### Start all services
+
+```bash
+docker-compose up
+```
+
+#### Start in detached mode
+
+```bash
+docker-compose up -d
+```
+
+#### Stop all services
+
+```bash
+docker-compose down
+```
+
+#### Stop and remove volumes
+
+```bash
+docker-compose down -v
+```
+
+#### View running services
+
+```bash
+docker-compose ps
+```
+
+### Screenshots
+
+#### Client Images on DockerHub
+![Alt text](hmi-yolo-client-image.png)
+
+#### Backend Images on DockerHub
+![Alt text](hmi-yolo-backend-image.png)
+
+#### Added product (during test)
+![Alt text](added-product.png)
