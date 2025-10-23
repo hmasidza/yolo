@@ -22,6 +22,10 @@ A Node.js/Express backend API with MongoDB, containerized using Docker.
 
 ![Vagrant up command 2](vagrant-up-2.png)
 
+#### Ansible playbook command
+
+![Ansible playbook command 1](ansible-playbook-1.png)
+
 ---
 
 ## Prerequisites
