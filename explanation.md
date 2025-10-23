@@ -3,13 +3,22 @@
 ## Screenshots
 
 #### Client Images on DockerHub
-![Alt text](hmi-yolo-client-image.png)
+
+![Client Images on DockerHub](hmi-yolo-client-image.png)
 
 #### Backend Images on DockerHub
-![Alt text](hmi-yolo-backend-image.png)
+
+![Backend Images on DockerHub](hmi-yolo-backend-image.png)
 
 #### Added product (during test)
-![Alt text](added-product.png)
+
+![Added product during test](added-product.png)
+
+#### Vagrant up command
+
+![Vagrant up command 1](vagrant-up-1.png)
+
+![Vagrant up command 2](vagrant-up-2.png)
 
 ---
 

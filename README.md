@@ -16,6 +16,12 @@ A Node.js/Express backend API with MongoDB, containerized using Docker.
 
 ![Alt text](added-product.png)
 
+#### Vagrant up command
+
+![Vagrant up command 1](vagrant-up-1.png)
+
+![Vagrant up command 2](vagrant-up-2.png)
+
 ---
 
 ## Prerequisites
