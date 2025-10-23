@@ -12,25 +12,25 @@ A Node.js + Express backend API with MongoDB, provisioned on separate Vagrant vi
 
 ![Alt text](hmi-yolo-backend-image.png)
 
-### Added product during test
-
-![Alt text](added-product.png)
-
-#### Vagrant up command
+### Vagrant up command
 
 ![Vagrant up command 1](vagrant-up-1.png)
 
 ![Vagrant up command 2](vagrant-up-2.png)
 
-#### Ansible-playbook commands
+### Ansible-playbook commands
 
 ![Ansible playbook command 1](ansible-playbook-1.png)
 
 ![Ansible playbook command 2](ansible-playbook-2.png)
 
-#### Running application on port 3000 of frontend VM
+### Running application on port 3000 of frontend VM
 
 ![Running application on port 3000 of frontend VM](running-site.png)
+
+### Added product during test
+
+![Alt text](added-product.png)
 
 ---
 
