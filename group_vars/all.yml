@@ -1,0 +1,17 @@
+# Global vars
+tz: Africa/Nairobi
+
+# Mongo DB, Frontend, Backend image tags from DockerHub
+mongo_image: "mongo:latest"
+backend_image: "hmasidza/hmi-yolo-backend:v1.0.1"
+frontend_image: "hmasidza/hmi-yolo-client:v1.0.1"
+
+# Ports
+mongo_port: "27017"
+backend_port: "5000"
+frontend_port: "3000"
+
+# VM IPs (this must match Vagrantfile)
+db_private_ip: "192.168.56.10"
+backend_private_ip: "192.168.56.11"
+frontend_private_ip: "192.168.56.12"
