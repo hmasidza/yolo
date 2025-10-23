@@ -1,0 +1,24 @@
+---
+# 1) Install Docker on all the 3 VMs
+- hosts: all
+  become: yes
+  roles:
+    - role: common
+
+# 2) Mongo DB
+- hosts: db
+  become: yes
+  roles:
+    - role: db
+
+# 3) Backend: points to Mongo instance on DB VM
+- hosts: backend
+  become: yes
+  roles:
+    - role: backend
+
+# 4) Frontend (should wait for backend)
+- hosts: frontend
+  become: yes
+  roles:
+    - role: frontend
