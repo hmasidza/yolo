@@ -1,6 +1,15 @@
 # Yolo Backend API: Using Ansible
 
-A Node.js + Express backend API with MongoDB, provisioned on separate Vagrant virtual machines (db, backend, frontend) and containerized using Docker through Ansible automation
+This project implements a modern, three-tier web application with a Node.js + Express backend and a MongoDB database, all deployed within a fully automated, multi-machine virtualized environment.
+
+The architecture is built on a microservices principle, where each core component (frontend, backend and database) runs in its own dedicated, isolated Ubuntu virtual machine. The entire infrastructure is provisioned, configured, and containerized automatically using a powerful Ansible automation pipeline.
+
+## Core Technology Stack
+
+- Application: Node.js, Express.js, MongoDB
+- Virtualization: Vagrant (Multi-VM)
+- Containerization: Docker
+- Automation & Orchestration: Ansible
 
 ## Screenshots
 
