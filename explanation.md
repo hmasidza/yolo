@@ -1,27 +1,5 @@
 # Explanation
 
-## Screenshots
-
-#### Client Images on DockerHub
-
-![Client Images on DockerHub](hmi-yolo-client-image.png)
-
-#### Backend Images on DockerHub
-
-![Backend Images on DockerHub](hmi-yolo-backend-image.png)
-
-#### Added product (during test)
-
-![Added product during test](added-product.png)
-
-#### Vagrant up command
-
-![Vagrant up command 1](vagrant-up-1.png)
-
-![Vagrant up command 2](vagrant-up-2.png)
-
----
-
 ## Dockerfile directives and what they are doing
 
 ### FROM
@@ -151,23 +129,25 @@ docker push hmasidza/hmi-yolo-backend:v1.0.0
    - Exposes port `3000` for host access.
 
 6. **Access from Host**
-   - Frontend → `http://localhost:3000`
-   - Backend → `http://localhost:5000`
-   - MongoDB → `mongodb://localhost:27017`
+   - Frontend - `http://localhost:3000`
+   - Backend - `http://localhost:5000`
+   - MongoDB - `mongodb://localhost:27017`
 
 ### Execution Order
 
-1. `common` → Applies to all VMs.  
-2. `db` → Must be ready before backend.  
-3. `backend` → Depends on MongoDB.  
-4. `frontend` → Depends on backend availability.
+1. `common` - Applies to all VMs.  
+2. `db` - Must be ready before backend.  
+3. `backend` - Depends on MongoDB(db).  
+4. `frontend` - Depends on backend availability.
 
 ### Configuration Hierarchy
 
-1. **`group_vars/all.yml`** – Global variables (ports, images, IPs, timezone).  
+1. **`group_vars/all.yml`** - Global variables (ports, images, IPs, timezone).  
 2. **`defaults/main.yml` in each role** – Role-specific defaults.
 
-### Possible Errors
+### Common Errors
+
+This error shows up mostly when running ```vagrant up```
 
 VirtualBox can't operate in VMX root mode.Please disable the KVM kernel extension, recompile your kernel and reboot.
 (VERR_VMX_IN_VMX_ROOT_MODE).

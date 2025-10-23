@@ -1,18 +1,18 @@
-# Yolo Backend API
+# Yolo Backend API: Using Ansible
 
-A Node.js/Express backend API with MongoDB, containerized using Docker.
+A Node.js + Express backend API with MongoDB, provisioned on separate Vagrant virtual machines (db, backend, frontend) and containerized using Docker through Ansible automation
 
 ## Screenshots
 
-### Client Images on DockerHub
+### Client Build Images on DockerHub
 
 ![Alt text](hmi-yolo-client-image.png)
 
-### Backend Images on DockerHub
+### Backend Build Images on DockerHub
 
 ![Alt text](hmi-yolo-backend-image.png)
 
-### Added product (during test)
+### Added product during test
 
 ![Alt text](added-product.png)
 
@@ -22,74 +22,15 @@ A Node.js/Express backend API with MongoDB, containerized using Docker.
 
 ![Vagrant up command 2](vagrant-up-2.png)
 
-#### Ansible playbook command
+#### Ansible-playbook commands
 
 ![Ansible playbook command 1](ansible-playbook-1.png)
 
----
+![Ansible playbook command 2](ansible-playbook-2.png)
 
-## Prerequisites
+#### Running application on port 3000 of frontend VM
 
-- [Docker](https://docs.docker.com/get-docker/) (version 20.10+)
-- [Docker Compose](https://docs.docker.com/compose/install/) (version 2.0+)
-
----
-
-## Docker-Compose Quick Start
-
-Clone the repository (if not already done)
-
-Start - Stop the application
-
-### Start all services
-
-```bash
-docker compose up
-```
-
-### Start in detached mode
-
-```bash
-docker compose up -d
-```
-
-### Stop all services
-
-```bash
-docker compose down
-```
-
-### Stop and remove volumes
-
-```bash
-docker compose down -v
-```
-
-### View running services
-
-```bash
-docker compose ps
-```
-
-## Manual commands to build and push images to DockerHub
-
-To test functionality locally first
-
-```bash
-docker build -t hmasidza/hmi-yolo-client:v1.0.0 ./client
-```
-
-```bash
-docker push hmasidza/hmi-yolo-client:v1.0.0
-```
-
-```bash
-docker build -t hmasidza/hmi-yolo-backend:v1.0.0 ./backend
-```
-
-```bash
-docker push hmasidza/hmi-yolo-backend:v1.0.0
-```
+![Running application on port 3000 of frontend VM](running-site.png)
 
 ---
 
@@ -189,9 +130,9 @@ You can also adjust:
 | `vagrant ssh yolo-db`                                           | SSH into a specific VM               |
 | `ansible-playbook -i inventory.yml playbook.yml`                | Apply provisioning manually          |
 | `ansible-playbook -i inventory.yml playbook.yml --tags backend` | Run only a specific role (if tagged) |
-| `docker ps` (inside VM)                                         | View running containers              |
+| `docker ps` (inside a VM)                                       | View running containers              |
 
-### Re-Provisioning
+### Re-provisioning
 
 To reapply changes after editing roles or vars:
 
@@ -203,6 +144,7 @@ or, from scratch:
 
 ```bash
 vagrant destroy -f
+
 vagrant up
 ```
 
@@ -216,7 +158,7 @@ vagrant up
 | Containers not running   | SSH into VM → `sudo docker ps -a`                          |
 | Port conflict            | Change host ports in `Vagrantfile` or `group_vars/all.yml` |
 
-### Errors
+### Common Error
 
 VirtualBox can't operate in VMX root mode.Please disable the KVM kernel extension, recompile your kernel and reboot.
 (VERR_VMX_IN_VMX_ROOT_MODE).
@@ -231,4 +173,72 @@ If you are using an AMD CPU
 
 ```bash
 sudo modprobe -r kvm_amd
+```
+
+---
+
+# Yolo Backend API: Using Docker Compose
+
+## Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) (version 20.10+)
+
+- [Docker Compose](https://docs.docker.com/compose/install/) (version 2.0+)
+
+---
+
+## Docker-Compose Quick Start
+
+Clone the repository (if not already done)
+
+Start - Stop the application
+
+### Start all services
+
+```bash
+docker compose up
+```
+
+### Start in detached mode
+
+```bash
+docker compose up -d
+```
+
+### Stop all services
+
+```bash
+docker compose down
+```
+
+### Stop and remove volumes
+
+```bash
+docker compose down -v
+```
+
+### View running services
+
+```bash
+docker compose ps
+```
+
+## Manual commands to build and push images to DockerHub
+
+To test functionality locally first
+
+```bash
+docker build -t hmasidza/hmi-yolo-client:v1.0.0 ./client
+```
+
+```bash
+docker push hmasidza/hmi-yolo-client:v1.0.0
+```
+
+```bash
+docker build -t hmasidza/hmi-yolo-backend:v1.0.0 ./backend
+```
+
+```bash
+docker push hmasidza/hmi-yolo-backend:v1.0.0
 ```
