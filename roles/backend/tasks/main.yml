@@ -1,0 +1,26 @@
+---
+- name: Ensure DB is reachable from backend VM
+  ansible.builtin.wait_for:
+    host: "{{ db_private_ip }}"
+    port: "{{ mongo_port }}"
+    delay: 2
+    timeout: 90
+
+- name: Run backend container
+  community.docker.docker_container:
+    name: hmi-yolo-backend
+    image: "{{ backend_image }}"
+    restart_policy: always
+    published_ports:
+      - "{{ backend_port }}:{{ backend_port }}"
+    env: "{{ backend_env }}"
+    tty: true
+    interactive: true
+    state: started
+
+- name: Wait until backend is reachable locally
+  ansible.builtin.wait_for:
+    host: "127.0.0.1"
+    port: "{{ backend_port }}"
+    delay: 2
+    timeout: 120

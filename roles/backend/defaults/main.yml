@@ -1,0 +1,6 @@
+---
+backend_env:
+  MONGO_URL: "mongodb://{{ db_private_ip }}:{{ mongo_port }}"
+  MONGODB_URI: "mongodb://{{ db_private_ip }}:{{ mongo_port }}"
+  DATABASE_URL: "mongodb://{{ db_private_ip }}:{{ mongo_port }}"
+  TZ: "{{ tz }}"

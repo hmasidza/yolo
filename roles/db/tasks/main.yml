@@ -1,0 +1,27 @@
+---
+- name: Create persistent volume for MongoDB
+  community.docker.docker_volume:
+    name: "{{ mongo_volume_name }}"
+    state: present
+
+- name: Run MongoDB container
+  community.docker.docker_container:
+    name: mongodb
+    image: "{{ mongo_image }}"
+    restart_policy: always
+    published_ports:
+      - "{{ mongo_port }}:{{ mongo_port }}"
+    mounts:
+      - source: "{{ mongo_volume_name }}"
+        target: /data/db
+        type: volume
+    env:
+      TZ: "{{ tz }}"
+    state: started
+
+- name: Wait until MongoDB is reachable locally
+  ansible.builtin.wait_for:
+    host: "127.0.0.1"
+    port: "{{ mongo_port }}"
+    delay: 2
+    timeout: 60

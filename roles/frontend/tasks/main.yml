@@ -1,0 +1,19 @@
+---
+- name: Ensure backend is reachable from frontend VM
+  ansible.builtin.wait_for:
+    host: "{{ backend_private_ip }}"
+    port: "{{ backend_port }}"
+    delay: 2
+    timeout: 120
+
+- name: Run frontend container
+  community.docker.docker_container:
+    name: hmi-yolo-client
+    image: "{{ frontend_image }}"
+    restart_policy: always
+    published_ports:
+      - "{{ frontend_port }}:{{ frontend_port }}"
+    env: "{{ frontend_env }}"
+    tty: true
+    interactive: true
+    state: started
