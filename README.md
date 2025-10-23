@@ -204,3 +204,20 @@ vagrant up
 | Docker modules not found | Run `ansible-galaxy install -r requirements.yml`           |
 | Containers not running   | SSH into VM → `sudo docker ps -a`                          |
 | Port conflict            | Change host ports in `Vagrantfile` or `group_vars/all.yml` |
+
+### Errors
+
+VirtualBox can't operate in VMX root mode.Please disable the KVM kernel extension, recompile your kernel and reboot.
+(VERR_VMX_IN_VMX_ROOT_MODE).
+
+If you are using an Intel CPU
+
+```bash
+sudo modprobe -r kvm_intel
+```
+
+If you are using an AMD CPU
+
+```bash
+sudo modprobe -r kvm_amd
+```

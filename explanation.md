@@ -158,4 +158,19 @@ docker push hmasidza/hmi-yolo-backend:v1.0.0
 1. **`group_vars/all.yml`** – Global variables (ports, images, IPs, timezone).  
 2. **`defaults/main.yml` in each role** – Role-specific defaults.
 
----
+### Possible Errors
+
+VirtualBox can't operate in VMX root mode.Please disable the KVM kernel extension, recompile your kernel and reboot.
+(VERR_VMX_IN_VMX_ROOT_MODE).
+
+If you are using an Intel CPU
+
+```bash
+sudo modprobe -r kvm_intel
+```
+
+If you are using an AMD CPU
+
+```bash
+sudo modprobe -r kvm_amd
+```
