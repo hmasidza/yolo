@@ -1,6 +1,19 @@
 # Explanation
 
-## 1. Dockerfile directives and what they are doing
+## Screenshots
+
+#### Client Images on DockerHub
+![Alt text](hmi-yolo-client-image.png)
+
+#### Backend Images on DockerHub
+![Alt text](hmi-yolo-backend-image.png)
+
+#### Added product (during test)
+![Alt text](added-product.png)
+
+---
+
+## Dockerfile directives and what they are doing
 
 ### FROM
 
@@ -40,7 +53,9 @@ What to run when the container starts
 
 ```CMD ["npm", "start"]``` tells Docker to run the ```npm start``` command when a container built from this Dockerfile starts
 
-## 2. How to achieve small images
+---
+
+## How to achieve small images
 
 ```bash
 FROM alpine:3.16.7
@@ -49,7 +64,9 @@ COPY --from=build /usr/src/app /app
 
 Starts from a smaller Alpine base and copies only the output we need. Resulting in a smaller and a cleaner runtime image.
 
-## 4. Why the MongoDB URL needed to change in source code
+---
+
+## Why the MongoDB URL needed to change in source code
 
 When running the app locally, we used 
 ```bash 
@@ -68,18 +85,9 @@ Hence the change to
 mongodb://mongodb:27017/yolo
 ```
 
-## 5. Screenshots
+---
 
-#### Client Images on DockerHub
-![Alt text](hmi-yolo-client-image.png)
-
-#### Backend Images on DockerHub
-![Alt text](hmi-yolo-backend-image.png)
-
-#### Added product (during test)
-![Alt text](added-product.png)
-
-## 6. Manual commands to build and push images to DockerHub
+## Manual commands to build and push images to DockerHub
 To test functionality locally first
 
 ```bash
@@ -97,3 +105,57 @@ docker build -t hmasidza/hmi-yolo-backend:v1.0.0 ./backend
 ```bash
 docker push hmasidza/hmi-yolo-backend:v1.0.0
 ```
+
+---
+
+## Ansible Overview
+
+| Component           | Description                                                                                 |
+|---------------------|---------------------------------------------------------------------------------------------|
+| **Vagrant**         | Automates creation of 3 Ubuntu VMs: one for each microservice (MongoDB, Backend, Frontend). |
+| **Ansible**         | Configures each VM using modular roles. Ensures idempotence and ordered provisioning.       |
+| **Docker**          | Runs the actual application containers on each VM without docker-compose.                   |
+| **Private Network** | Enables backend and frontend to communicate securely with MongoDB using static IPs.         |
+
+### Flow
+
+1. **Vagrant Up**
+   - Spins up 3 VMs with fixed IPs (`192.168.56.10-12`) and forwards service ports (27017, 5000, 3000).
+   - Provides SSH access for Ansible provisioning.
+
+2. **Common Role**
+   - Installs Docker, Python SDK, and dependencies on all VMs.
+   - Starts and enables the Docker service.
+
+3. **DB Role**
+   - Runs a MongoDB container with a persistent volume.
+   - Exposes port `27017` and waits until it becomes reachable.
+
+4. **Backend Role**
+   - Deploys the API container.
+   - Injects environment variables pointing to MongoDB at `192.168.56.10`.
+   - Publishes port `5000` and waits until API is healthy.
+
+5. **Frontend Role**
+   - Deploys the React UI container.
+   - Configures environment variables for backend API at `192.168.56.11`.
+   - Exposes port `3000` for host access.
+
+6. **Access from Host**
+   - Frontend → `http://localhost:3000`
+   - Backend → `http://localhost:5000`
+   - MongoDB → `mongodb://localhost:27017`
+
+### Execution Order
+
+1. `common` → Applies to all VMs.  
+2. `db` → Must be ready before backend.  
+3. `backend` → Depends on MongoDB.  
+4. `frontend` → Depends on backend availability.
+
+### Configuration Hierarchy
+
+1. **`group_vars/all.yml`** – Global variables (ports, images, IPs, timezone).  
+2. **`defaults/main.yml` in each role** – Role-specific defaults.
+
+---
