@@ -1,18 +1,18 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
 package-lock.json
 /node_modules
 /.pnp
 .pnp.js
 
-# testing
+# Testing
 /coverage
 
-# production
+# Production
 /build
 
-# misc
+# Miscellaneous
 .DS_Store
 .env.local
 .env.development.local
@@ -23,3 +23,15 @@ package-lock.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Vagrant files
+.vagrant/
+*.log
+*.box
+
+# Ansible files
+*.retry
+*.vault.tmp
+ansible.cfg.local
+inventory_temp
+*.log
