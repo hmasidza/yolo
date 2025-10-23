@@ -124,6 +124,7 @@ Check installations:
 
 ```bash
 vagrant --version
+
 ansible --version
 ```
 
@@ -133,7 +134,7 @@ ansible --version
 vagrant up
 ```
 
-### Install required Ansible collection
+### Install required Ansible collection(This is run just once)
 
 ```bash
 ansible-galaxy install -r requirements.yml
