@@ -42,7 +42,6 @@ spec:
           value: "password"
         - name: MONGO_INITDB_DATABASE
           value: "hmi-yolo"
-        # Removed cache size limit - let MongoDB auto-configure
         livenessProbe:
           tcpSocket: 
             port: 27017
@@ -103,9 +102,9 @@ spec:
               containerPort: 5000
           env:
             - name: MONGO_URI
-              value: "mongodb://admin:password@mongodb-service:27017/hmi-yolo"
+              value: "mongodb://admin:password@mongodb-service.hmi-yolo.svc.cluster.local:27017/hmi-yolo"
             - name: MONGO_URL
-              value: "mongodb://admin:password@mongodb-service:27017/hmi-yolo"
+              value: "mongodb://admin:password@mongodb-service.hmi-yolo.svc.cluster.local:27017/hmi-yolo"
           resources:
             requests: { cpu: "50m", memory: "64Mi" }
             limits:   { cpu: "200m", memory: "128Mi" }
