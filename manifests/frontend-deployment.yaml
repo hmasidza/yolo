@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hmi-yolo-client
+  namespace: hmi-yolo
+  labels:
+    app: frontend
+    type: ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        type: ui
+        component: interface
+    spec:
+      containers:
+      - name: frontend
+        image: hmasidza/hmi-yolo-client:v1.0.1
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_BACKEND_URL
+          value: "http://backend-service:5000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: hmi-yolo
+  labels:
+    app: frontend
+    type: ui-service
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer
