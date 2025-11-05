@@ -3,11 +3,8 @@ kind: Deployment
 metadata:
   name: hmi-yolo-backend
   namespace: hmi-yolo
-  labels:
-    app: backend
-    type: api
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -15,8 +12,6 @@ spec:
     metadata:
       labels:
         app: backend
-        type: api
-        component: processor
     spec:
       containers:
       - name: backend
@@ -26,15 +21,19 @@ spec:
         env:
         - name: MONGODB_URI
           value: "mongodb://mongodb-service:27017/mydatabase"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
   namespace: hmi-yolo
-  labels:
-    app: backend
-    type: api-service
 spec:
   selector:
     app: backend

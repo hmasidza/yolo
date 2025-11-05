@@ -3,9 +3,6 @@ kind: Deployment
 metadata:
   name: hmi-yolo-client
   namespace: hmi-yolo
-  labels:
-    app: frontend
-    type: ui
 spec:
   replicas: 1
   selector:
@@ -15,8 +12,6 @@ spec:
     metadata:
       labels:
         app: frontend
-        type: ui
-        component: interface
     spec:
       containers:
       - name: frontend
@@ -28,39 +23,17 @@ spec:
           value: "http://backend-service:5000"
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "300m"
+            memory: "128Mi"
+            cpu: "100m"
           limits:
-            memory: "1Gi"
-            cpu: "500m"
-        startupProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 30
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 60
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+            memory: "256Mi"
+            cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
   namespace: hmi-yolo
-  labels:
-    app: frontend
-    type: ui-service
 spec:
   selector:
     app: frontend
