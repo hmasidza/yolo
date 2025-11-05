@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hmi-yolo-backend
+  namespace: hmi-yolo
+  labels:
+    app: backend
+    type: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+        type: api
+        component: processor
+    spec:
+      containers:
+      - name: backend
+        image: hmasidza/hmi-yolo-backend:v1.0.1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://mongodb-service:27017/mydatabase"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: hmi-yolo
+  labels:
+    app: backend
+    type: api-service
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 5000
+    targetPort: 5000
+  type: ClusterIP
