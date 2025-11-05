@@ -30,31 +30,34 @@ spec:
           mountPath: /data/db
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "128Mi"
+            cpu: "100m"
           limits:
-            memory: "1Gi"
-            cpu: "500m"
+            memory: "256Mi"
+            cpu: "250m"
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
           value: "admin"
         - name: MONGO_INITDB_ROOT_PASSWORD
           value: "password"
+        - name: MONGO_INITDB_DATABASE
+          value: "hmi-yolo"
+        command: ["mongod", "--wiredTigerCacheSizeGB=0.1", "--bind_ip_all"]
         livenessProbe:
           tcpSocket: 
             port: 27017
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 10
+          initialDelaySeconds: 90
+          periodSeconds: 20
+          timeoutSeconds: 5
         readinessProbe:
           exec:
             command: 
-            - mongosh
-            - --eval
-            - "db.adminCommand('ping')"
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 10
+            - sh
+            - -c
+            - "mongosh --eval 'db.adminCommand(\"ping\")'"
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          timeoutSeconds: 5
   volumeClaimTemplates:
   - metadata:
       name: mongodb-data
@@ -63,7 +66,7 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: 10Gi
+          storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
@@ -100,31 +103,28 @@ spec:
               containerPort: 5000
           env:
             - name: MONGO_URI
-              value: "mongodb://admin:password@mongodb-service:27017"
+              value: "mongodb://admin:password@mongodb-service:27017/hmi-yolo"
             - name: MONGO_URL
-              value: "mongodb://admin:password@mongodb-service:27017"
+              value: "mongodb://admin:password@mongodb-service:27017/hmi-yolo"
           resources:
-            requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "500m", memory: "512Mi" }
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits:   { cpu: "200m", memory: "128Mi" }
           startupProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 5000
-            failureThreshold: 30
+            failureThreshold: 60
             periodSeconds: 5
           readinessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 5000
             initialDelaySeconds: 30
-            periodSeconds: 10
+            periodSeconds: 15
             failureThreshold: 3
           livenessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 5000
-            initialDelaySeconds: 45
-            periodSeconds: 15
+            initialDelaySeconds: 60
+            periodSeconds: 30
 ---
 apiVersion: v1
 kind: Service
@@ -164,27 +164,24 @@ spec:
             - name: REACT_APP_API_BASE_URL
               value: "http://hmi-yolo-backend.hmi-yolo.svc.cluster.local:5000"
           resources:
-            requests: { cpu: "100m", memory: "192Mi" }
-            limits:   { cpu: "300m", memory: "384Mi" }
+            requests: { cpu: "30m", memory: "32Mi" }
+            limits:   { cpu: "100m", memory: "64Mi" }
           startupProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 3000
-            failureThreshold: 30
+            failureThreshold: 60
             periodSeconds: 5
           readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 3000
             initialDelaySeconds: 30
             periodSeconds: 15
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 60
+            periodSeconds: 30
 ---
 apiVersion: v1
 kind: Service
