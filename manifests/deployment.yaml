@@ -10,7 +10,7 @@ metadata:
   name: mongodb
   namespace: hmi-yolo
 spec:
-  serviceName: mongodb-service
+  serviceName: mongodb
   replicas: 1
   selector:
     matchLabels:
@@ -35,13 +35,6 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "250m"
-        env:
-        - name: MONGO_INITDB_ROOT_USERNAME
-          value: "admin"
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          value: "password"
-        - name: MONGO_INITDB_DATABASE
-          value: "hmi-yolo"
         livenessProbe:
           tcpSocket: 
             port: 27017
@@ -70,7 +63,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb-service
+  name: mongodb
   namespace: hmi-yolo
 spec:
   selector:
@@ -102,9 +95,9 @@ spec:
               containerPort: 5000
           env:
             - name: MONGO_URI
-              value: "mongodb://admin:password@mongodb-service.hmi-yolo.svc.cluster.local:27017/hmi-yolo"
+              value: "mongodb://mongodb:27017/"
             - name: MONGO_URL
-              value: "mongodb://admin:password@mongodb-service.hmi-yolo.svc.cluster.local:27017/hmi-yolo"
+              value: "mongodb://mongodb:27017/"
           resources:
             requests: { cpu: "50m", memory: "64Mi" }
             limits:   { cpu: "200m", memory: "128Mi" }
