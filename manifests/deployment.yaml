@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: mongodb
-        image: mongo
+        image: docker.io/mongo:latest
         ports:
         - containerPort: 27017
         volumeMounts:
@@ -30,20 +30,31 @@ spec:
           mountPath: /data/db
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
             memory: "512Mi"
-            cpu: "200m"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: "admin"
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: "password"
         livenessProbe:
-          tcpSocket: { port: 27017 }
-          initialDelaySeconds: 30
+          tcpSocket: 
+            port: 27017
+          initialDelaySeconds: 60
           periodSeconds: 10
+          timeoutSeconds: 10
         readinessProbe:
           exec:
-            command: ["mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
-          initialDelaySeconds: 20
+            command: 
+            - mongosh
+            - --eval
+            - "db.adminCommand('ping')"
+          initialDelaySeconds: 30
           periodSeconds: 10
+          timeoutSeconds: 10
   volumeClaimTemplates:
   - metadata:
       name: mongodb-data
@@ -82,32 +93,38 @@ spec:
     spec:
       containers:
         - name: backend
-          image: hmasidza/hmi-yolo-backend:v1.0.1
+          image: docker.io/hmasidza/hmi-yolo-backend:v1.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 5000
           env:
             - name: MONGO_URI
-              value: "mongodb://mongodb-service:27017"
+              value: "mongodb://admin:password@mongodb-service:27017"
             - name: MONGO_URL
-              value: "mongodb://mongodb-service:27017"
+              value: "mongodb://admin:password@mongodb-service:27017"
           resources:
-            requests: { cpu: "100m", memory: "192Mi" }
-            limits:   { cpu: "500m", memory: "384Mi" }
+            requests: { cpu: "200m", memory: "256Mi" }
+            limits:   { cpu: "500m", memory: "512Mi" }
           startupProbe:
-            tcpSocket: { port: 5000 }
+            httpGet:
+              path: /health
+              port: 5000
             failureThreshold: 30
-            periodSeconds: 2
-          readinessProbe:
-            tcpSocket: { port: 5000 }
-            initialDelaySeconds: 15
             periodSeconds: 5
-            failureThreshold: 6
-          livenessProbe:
-            tcpSocket: { port: 5000 }
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
             initialDelaySeconds: 30
             periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 45
+            periodSeconds: 15
 ---
 apiVersion: v1
 kind: Service
@@ -138,7 +155,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: hmasidza/hmi-yolo-client:v1.0.1
+          image: docker.io/hmasidza/hmi-yolo-client:v1.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -147,21 +164,27 @@ spec:
             - name: REACT_APP_API_BASE_URL
               value: "http://hmi-yolo-backend.hmi-yolo.svc.cluster.local:5000"
           resources:
-            requests: { cpu: "50m", memory: "128Mi" }
-            limits:   { cpu: "300m", memory: "256Mi" }
+            requests: { cpu: "100m", memory: "192Mi" }
+            limits:   { cpu: "300m", memory: "384Mi" }
           startupProbe:
-            tcpSocket: { port: 3000 }
+            httpGet:
+              path: /
+              port: 3000
             failureThreshold: 30
-            periodSeconds: 2
-          readinessProbe:
-            tcpSocket: { port: 3000 }
-            initialDelaySeconds: 15
             periodSeconds: 5
-            failureThreshold: 6
-          livenessProbe:
-            tcpSocket: { port: 3000 }
-            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 20
             periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 15
 ---
 apiVersion: v1
 kind: Service
