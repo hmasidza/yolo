@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "=== Cleaning up HMI YOLO Application ==="
-
 echo "Deleting frontend..."
 kubectl delete -f frontend-deployment.yaml
 

@@ -4,14 +4,14 @@ metadata:
   name: hmi-yolo-backend
   namespace: hmi-yolo
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: backend
+      app: hmi-yolo-backend
   template:
     metadata:
       labels:
-        app: backend
+        app: hmi-yolo-backend
     spec:
       containers:
       - name: backend
@@ -20,26 +20,38 @@ spec:
         - containerPort: 5000
         env:
         - name: MONGODB_URI
-          value: "mongodb://mongodb:27017/yolomy"
+          value: "mongodb://mongodb-service:27017/yolomy"
+        - name: NODE_ENV
+          value: "production"
+        - name: UV_THREADPOOL_SIZE
+          value: "4"
         livenessProbe:
           httpGet:
             path: /health
             port: 5000
           initialDelaySeconds: 30
-          periodSeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /health
             port: 5000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "200m"
-          limits:
             memory: "512Mi"
-            cpu: "500m"
+            cpu: "300m"
+          limits:
+            memory: "1Gi"
+            cpu: "800m"
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 30"]
 ---
 apiVersion: v1
 kind: Service
@@ -48,8 +60,9 @@ metadata:
   namespace: hmi-yolo
 spec:
   selector:
-    app: backend
+    app: hmi-yolo-backend
   ports:
   - port: 5000
     targetPort: 5000
+    protocol: TCP
   type: ClusterIP

@@ -4,14 +4,14 @@ metadata:
   name: hmi-yolo-client
   namespace: hmi-yolo
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: frontend
+      app: hmi-yolo-client
   template:
     metadata:
       labels:
-        app: frontend
+        app: hmi-yolo-client
     spec:
       containers:
       - name: frontend
@@ -21,12 +21,18 @@ spec:
         env:
         - name: REACT_APP_BACKEND_URL
           value: "http://backend-service:5000"
+        - name: NODE_ENV
+          value: "production"
+        - name: GENERATE_SOURCEMAP
+          value: "false"
+        - name: INLINE_RUNTIME_CHUNK
+          value: "false"
         livenessProbe:
           httpGet:
             path: /
             port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
+          initialDelaySeconds: 20
+          periodSeconds: 15
           timeoutSeconds: 5
           failureThreshold: 3
         readinessProbe:
@@ -34,17 +40,20 @@ spec:
             path: /
             port: 3000
           initialDelaySeconds: 5
-          periodSeconds: 5
+          periodSeconds: 10
           timeoutSeconds: 3
-          failureThreshold: 1
+          failureThreshold: 3
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "150m"
+            memory: "128Mi"
+            cpu: "100m"
           limits:
-            memory: "512Mi"
-            cpu: "500m"
-        args: ["--", "--host", "0.0.0.0"]
+            memory: "256Mi"
+            cpu: "300m"
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 15"]
 ---
 apiVersion: v1
 kind: Service
@@ -53,7 +62,7 @@ metadata:
   namespace: hmi-yolo
 spec:
   selector:
-    app: frontend
+    app: hmi-yolo-client
   ports:
   - port: 80
     targetPort: 3000

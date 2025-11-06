@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "=== Deploying HMI YOLO Application ==="
-
 echo "1. Creating namespace..."
 kubectl apply -f namespace.yaml
 
