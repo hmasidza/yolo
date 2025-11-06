@@ -163,3 +163,22 @@ If you are using an AMD CPU
 ```bash
 sudo modprobe -r kvm_amd
 ```
+
+## Google Kubernetes Engine
+The solution implements a three-tier web application architecture on Google Kubernetes Engine comprising: 
+
+### 1. React frontend
+
+Frontend container serving static assets on port 3000, exposed externally via LoadBalancer service at http://34.71.103.12/; 
+
+### 2. Node backend
+
+Backend API container handling business logic on port 5000, communicating with the frontend through environment-configured endpoints
+
+### 3. MongoDB
+
+Database deployed as a StatefulSet with persistent volume claims for data persistence. 
+
+Kubernetes Deployments manage the stateless frontend and backend components with replica sets for high availability, while the StatefulSet ensures stable network identities and persistent storage for the database. 
+
+All services are deployed within the `hmi-yolo` namespace using optimized resource requests and limits, with the backend connecting to MongoDB via internal DNS ( `mongodb-service:27017` ). The infrastructure leverages GKE's managed Kubernetes environment with auto-scaling node pools, providing a scalable, resilient, and production-ready deployment.

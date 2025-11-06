@@ -1,4 +1,140 @@
-# Yolo Backend API: Using Ansible
+# Yolo Application: Google Kubernetes Engine
+
+This project deploys a full-stack application (React frontend, Node.js backend, MongoDB) on Google Kubernetes Engine.
+
+## Live Demo
+
+The application is deployed and accessible at:  
+**http://34.71.103.12/**
+
+## Architecture
+
+- **Frontend**: React application served on port 3000 internally load-balanced to external ip 80
+- **Backend**: Node.js API server on port 5000  
+- **Database**: MongoDB StatefulSet with persistent storage
+- **Infrastructure**: Google Kubernetes Engine (GKE)
+
+## Prerequisites
+
+- Google Cloud Platform account
+- `gcloud` CLI installed and configured
+- `kubectl` CLI installed
+- Docker (for building images)
+
+## Screenshots
+
+![Alt text](k8s1.png)
+
+![Alt text](k8s2.png)
+
+![Alt text](k8s3.png)
+
+## Quick Start
+
+### 1. Set up GCP Project
+
+```bash
+# Set your project
+gcloud config set project XXXXXX
+gcloud config set compute/zone us-central1-c
+
+# Enable required APIs
+gcloud services enable \
+  container.googleapis.com \
+  compute.googleapis.com \
+  storage.googleapis.com \
+  cloudresourcemanager.googleapis.com \
+  iam.googleapis.com
+
+# Create cluster with optimized settings
+gcloud container clusters create hmi-yolo-cluster \
+  --zone us-central1-c \
+  --num-nodes=2 \
+  --machine-type=e2-standard-2 \
+  --disk-size=50GB \
+  --enable-autoscaling \
+  --min-nodes=1 \
+  --max-nodes=4 \
+  --enable-ip-alias
+
+# Get Cluster Credentials
+gcloud container clusters get-credentials hmi-yolo-cluster --zone us-central1-c
+```
+
+### 2. Apply all configurations
+
+```bash
+# Namespace
+kubectl apply -f manifests/namespace.yaml
+
+# DB
+kubectl apply -f manifests/mongodb-statefulset.yaml
+
+# Backend
+kubectl apply -f manifests/backend-deployment.yaml
+
+# Frontend
+kubectl apply -f manifests/frontend-deployment.yaml
+```
+
+### 3. Check Deployment Status
+
+```bash
+# Check all resources
+kubectl get all -n hmi-yolo
+
+# Check pod status
+kubectl get pods -n hmi-yolo
+
+# Check services
+kubectl get svc -n hmi-yolo
+
+# Get external IP for frontend
+kubectl get service frontend-service -n hmi-yolo -w
+```
+
+### 4. Check Logs
+
+```bash
+# Backend logs
+kubectl logs -l app=hmi-yolo-backend -n hmi-yolo -f
+
+# Frontend logs  
+kubectl logs -l app=hmi-yolo-client -n hmi-yolo -f
+
+# MongoDB logs
+kubectl logs -l app=mongodb -n hmi-yolo -f
+```
+
+### 5. Scaling Management Commands
+
+```bash
+# Scale backend
+kubectl scale deployment hmi-yolo-backend -n hmi-yolo --replicas=3
+
+# Scale frontend
+kubectl scale deployment hmi-yolo-client -n hmi-yolo --replicas=3
+```
+
+### 2. Cleanup resources
+
+```bash
+# Namespace
+kubectl delete -f manifests/namespace.yaml
+
+# DB
+kubectl delete -f manifests/mongodb-statefulset.yaml
+
+# Backend
+kubectl delete -f manifests/backend-deployment.yaml
+
+# Frontend
+kubectl delete -f manifests/frontend-deployment.yaml
+```
+
+---
+
+# Yolo Application: Ansible
 
 This project implements a modern, three-tier web application with a Node.js + Express backend and a MongoDB database, all deployed within a fully automated, multi-machine virtualized environment.
 
@@ -186,7 +322,7 @@ sudo modprobe -r kvm_amd
 
 ---
 
-# Yolo Backend API: Using Docker Compose
+# Yolo Application: Docker-Compose
 
 ## Prerequisites
 
