@@ -21,25 +21,17 @@ spec:
         env:
         - name: REACT_APP_BACKEND_URL
           value: "http://backend-service:5000"
-        - name: HOST
-          value: "0.0.0.0"
-        - name: PORT
-          value: "3000"
-        - name: WDS_SOCKET_HOST
-          value: "0.0.0.0"
-        - name: CHOKIDAR_USEPOLLING
-          value: "true"
-        - name: BROWSER
-          value: "none"
-        command: ["npm"]
-        args: ["start"]
+        - name: NODE_ENV
+          value: "production"
+        command: ["/bin/sh"]
+        args: ["-c", "npm run build && npx serve -s build -l 3000"]
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "300m"
-          limits:
             memory: "1Gi"
-            cpu: "800m"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
 ---
 apiVersion: v1
 kind: Service
