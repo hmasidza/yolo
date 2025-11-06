@@ -177,8 +177,11 @@ Backend API container handling business logic on port 5000, communicating with t
 
 ### 3. MongoDB
 
-Database deployed as a StatefulSet with persistent volume claims for data persistence. 
+Database deployed as a StatefulSet with persistent volume claims for data persistence.
+Persistent storage is implemented solely for MongoDB using PersistentVolumeClaims with 20GB standard storage, ensuring data durability across pod restarts.
 
 Kubernetes Deployments manage the stateless frontend and backend components with replica sets for high availability, while the StatefulSet ensures stable network identities and persistent storage for the database. 
 
 All services are deployed within the `hmi-yolo` namespace using optimized resource requests and limits, with the backend connecting to MongoDB via internal DNS ( `mongodb-service:27017` ). The infrastructure leverages GKE's managed Kubernetes environment with auto-scaling node pools, providing a scalable, resilient, and production-ready deployment.
+
+I followed a feature branch Git workflow with semantic versioning for Docker images e.g. ( `hmasidza/hmi-yolo-backend:v1.0.1` )
