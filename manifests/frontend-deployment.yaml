@@ -21,17 +21,32 @@ spec:
         env:
         - name: REACT_APP_BACKEND_URL
           value: "http://backend-service:5000"
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "3000"
+        - name: WDS_SOCKET_HOST
+          value: "0.0.0.0"
+        - name: CHOKIDAR_USEPOLLING
+          value: "true"
         - name: NODE_ENV
           value: "production"
         - name: GENERATE_SOURCEMAP
           value: "false"
-        - name: INLINE_RUNTIME_CHUNK
-          value: "false"
+        command: ["npm"]
+        args: ["start"]
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
         livenessProbe:
           httpGet:
             path: /
             port: 3000
-          initialDelaySeconds: 20
+          initialDelaySeconds: 40
           periodSeconds: 15
           timeoutSeconds: 5
           failureThreshold: 3
@@ -39,17 +54,10 @@ spec:
           httpGet:
             path: /
             port: 3000
-          initialDelaySeconds: 5
+          initialDelaySeconds: 20
           periodSeconds: 10
           timeoutSeconds: 3
           failureThreshold: 3
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "300m"
         lifecycle:
           preStop:
             exec:
